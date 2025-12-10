@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Gallery | Premium Collection</title>
+    <meta name="description" content="A curated gallery of AI-generated images with high-fidelity prompts. Explore, copy, and create.">
+    
+    <!-- SEO & Social Media Meta Tags -->
+    <meta property="og:title" content="AI Prompt Gallery">
+    <meta property="og:description" content="Browse 1000+ high-quality AI prompts and images.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --bg-color: #0f1115;
+            --card-bg: #1c1f26;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --border-color: #2d3748;
+            --glass: rgba(28, 31, 38, 0.95);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- HEADER & SEARCH --- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+        .brand span { color: var(--accent-color); }
+
+        .search-bar {
+            position: relative;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .search-bar input {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border-color);
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.95rem;
+            transition: border 0.3s ease;
+        }
+        
+        .search-bar input:focus { border-color: var(--accent-color); }
+        
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            width: 18px;
+            height: 18px;
+        }
+
+        /* --- MASONRY GRID --- */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* CSS Column Masonry - Best Performance for static height items */
+        .masonry-grid {
+            column-count: 4;
+            column-gap: 1.5rem;
+        }
+
+        @media (max-width: 1200px) { .masonry-grid { column-count: 3; } }
+        @media (max-width: 900px) { .masonry-grid { column-count: 2; } }
+        @media (max-width: 600px) { .masonry-grid { column-count: 1; } }
+
+        /* --- CARD STYLE --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            break-inside: avoid; /* Prevents card from splitting across columns */
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            cursor: pointer;
+            will-change: transform;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .card-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            background: #000;
+            min-height: 200px; /* Placeholder height */
+        }
+
+        .card-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: opacity 0.3s ease;
+            opacity: 0; /* Fade in on load */
+        }
+
+        .card-img.loaded { opacity: 1; }
+
+        .card-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            opacity: 0;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+        }
+
+        .card:hover .card-overlay { opacity: 1; }
+
+        .card-category {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #eee;
+        }
+
+        .quick-copy {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* --- LIGHTBOX MODAL --- */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            display: flex;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.active { opacity: 1; pointer-events: all; }
+
+        .modal-content {
+            background: var(--card-bg);
+            width: 90%;
+            max-width: 1100px;
+            max-height: 90vh;
+            margin: auto;
+            border-radius: 16px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-image-container {
+            flex: 1.5;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .modal-details {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-btn:hover { color: #fff; }
+
+        .prompt-box {
+            background: #111;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            color: #ddd;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tag {
+            background: #2d3748;
+            color: #ccc;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .action-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.2s;
+        }
+        
+        .action-btn:hover { background: var(--accent-hover); }
+
+        /* Mobile Modal Adjustments */
+        @media (max-width: 850px) {
+            .modal-content { flex-direction: column; overflow-y: scroll; }
+            .modal-image-container { height: 40vh; flex: none; }
+            .modal-details { height: auto; flex: none; }
+        }
+
+        /* --- LOADING STATE --- */
+        .loader {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Utility for Copy Feedback */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #10b981;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            z-index: 2000;
+            font-weight: 600;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+    </style>
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json" id="seo-json-ld">
+    {
+      "@context": "https://schema.org",
+      "@type": "ImageGallery",
+      "name": "AI Prompt Gallery",
+      "description": "A collection of 1000 AI generated images with detailed prompts.",
+      "images": [] 
+    }
+    </script>
+</head>
+<body>
+
+<header>
+    <div class="brand">Prompt<span>Gallery</span></div>
+    <div class="search-bar">
+        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <input type="text" id="searchInput" placeholder="Search prompts, categories, or tags...">
+    </div>
+</header>
+
+<div class="container">
+    <div class="masonry-grid" id="galleryGrid">
+        <!-- Javascript will inject items here -->
+    </div>
+    <div id="loading" class="loader">Loading more inspirations...</div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="imageModal">
+    <div class="modal-content">
+        <div class="modal-image-container">
+            <img src="" alt="AI Generated Art" class="modal-img" id="modalImg">
+        </div>
+        <div class="modal-details">
+            <div class="modal-header">
+                <span class="card-category" id="modalCategory" style="position:static; margin:0;">Category</span>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            
+            <label style="color:var(--text-secondary); font-size:0.8rem; margin-bottom:0.5rem; display:block;">PROMPT</label>
+            <div class="prompt-box" id="modalPrompt"></div>
+            
+            <div class="tags-container" id="modalTags"></div>
+            
+            <div style="margin-top:auto">
+                <button class="action-btn" id="copyBtn">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                    Copy Prompt
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast">Copied to clipboard!</div>
+
+<script>
+    // --- STATE MANAGEMENT ---
+    let allData = [];
+    let displayedData = [];
+    let loadedCount = 0;
+    const BATCH_SIZE = 20;
+    const grid = document.getElementById('galleryGrid');
+    const loadingEl = document.getElementById('loading');
+    let isModalOpen = false;
+
+    // --- FETCH DATA ---
+    async function initGallery() {
+        try {
+            const response = await fetch('prompt.json');
+            if (!response.ok) throw new Error('Failed to load prompt.json');
+            
+            allData = await response.json();
+            
+            // Optimization: Generate basic SEO schema for the first 100 items to keep DOM light
+            updateSEOSchema(allData.slice(0, 50));
+            
+            // Initial Render
+            displayedData = allData;
+            renderNextBatch();
+            
+            // Setup Infinite Scroll
+            setupIntersectionObserver();
+        } catch (error) {
+            console.error(error);
+            loadingEl.textContent = "Error loading gallery data. Please ensure prompt.json is present.";
+        }
+    }
+
+    // --- RENDERING ---
+    function renderNextBatch() {
+        const nextBatch = displayedData.slice(loadedCount, loadedCount + BATCH_SIZE);
+        
+        if (nextBatch.length === 0) {
+            loadingEl.style.display = 'none';
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+
+        nextBatch.forEach(item => {
+            const card = document.createElement('figure');
+            card.className = 'card';
+            card.onclick = () => openModal(item);
+            
+            // Shorten prompt for alt text to benefit SEO without bloating
+            const altText = item.prompt.substring(0, 150).replace(/"/g, '') + '...';
+
+            card.innerHTML = `
+                <div class="card-image-wrapper">
+                    <div class="card-category">${item.category}</div>
+                    <img src="${item.image}" 
+                         alt="${altText}" 
+                         class="card-img" 
+                         loading="lazy"
+                         onload="this.classList.add('loaded')">
+                    <div class="card-overlay">
+                        <button class="quick-copy" onclick="event.stopPropagation(); copyText('${item.prompt.replace(/'/g, "\\'")}')">
+                            Copy Prompt
+                        </button>
+                    </div>
+                </div>
+                <figcaption style="display:none">${item.prompt}</figcaption> <!-- Semantic hidden caption -->
+            `;
+            fragment.appendChild(card);
+        });
+
+        grid.appendChild(fragment);
+        loadedCount += nextBatch.length;
+        
+        if (loadedCount >= displayedData.length) {
+            loadingEl.style.display = 'none';
+        }
+    }
+
+    // --- INFINITE SCROLL ---
+    function setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                renderNextBatch();
+            }
+        }, { rootMargin: '200px' });
+        
+        observer.observe(loadingEl);
+    }
+
+    // --- SEARCH & FILTER ---
+    const searchInput = document.getElementById('searchInput');
+    let searchTimeout;
+
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            const term = e.target.value.toLowerCase();
+            
+            // Reset Grid
+            grid.innerHTML = '';
+            loadedCount = 0;
+            loadingEl.style.display = 'block';
+
+            if (term === '') {
+                displayedData = allData;
+            } else {
+                displayedData = allData.filter(item => 
+                    item.category.toLowerCase().includes(term) || 
+                    item.prompt.toLowerCase().includes(term) ||
+                    (item.tags && item.tags.some(tag => tag.toLowerCase().includes(term)))
+                );
+            }
+            renderNextBatch();
+        }, 300); // Debounce
+    });
+
+    // --- MODAL LOGIC ---
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImg');
+    const modalPrompt = document.getElementById('modalPrompt');
+    const modalCategory = document.getElementById('modalCategory');
+    const modalTags = document.getElementById('modalTags');
+    const copyBtn = document.getElementById('copyBtn');
+
+    function openModal(item) {
+        modalImg.src = item.image;
+        modalPrompt.textContent = item.prompt;
+        modalCategory.textContent = item.category;
+        
+        // Tags
+        modalTags.innerHTML = '';
+        if(item.tags) {
+            item.tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.className = 'tag';
+                span.textContent = '#' + tag;
+                modalTags.appendChild(span);
+            });
+        }
+
+        // Setup Copy Button
+        copyBtn.onclick = () => copyText(item.prompt);
+
+        modal.classList.add('active');
+        isModalOpen = true;
+        document.body.style.overflow = 'hidden'; // Prevent scrolling bg
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        isModalOpen = false;
+        document.body.style.overflow = '';
+        setTimeout(() => { modalImg.src = ''; }, 300); // Clear after anim
+    }
+
+    document.getElementById('closeModal').onclick = closeModal;
+    
+    // Close on click outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isModalOpen) closeModal();
+    });
+
+    // --- UTILITIES ---
+    async function copyText(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            showToast();
+        } catch (err) {
+            console.error('Failed to copy', err);
+        }
+    }
+
+    function showToast() {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    // --- SEO GENERATION ---
+    function updateSEOSchema(items) {
+        const schema = document.getElementById('seo-json-ld');
+        const data = JSON.parse(schema.textContent);
+        
+        data.images = items.map(item => ({
+            "@type": "ImageObject",
+            "contentUrl": window.location.origin + item.image,
+            "description": item.prompt,
+            "name": `AI Art - ${item.category}`,
+            "keywords": item.tags ? item.tags.join(', ') : ""
+        }));
+        
+        schema.textContent = JSON.stringify(data);
+    }
+
+    // Initialize
+    initGallery();
+
+</script>
+</body>
+</html>
