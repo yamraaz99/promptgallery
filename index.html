@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Prompt Gallery | Premium Collection</title>
-    <meta name="description" content="A curated gallery of AI-generated images with high-fidelity prompts. Explore, copy, and create.">
+    <meta name="description" content="A curated gallery of AI-generated images with high-fidelity prompts. Explore by category and create.">
     
     <!-- SEO & Social Media Meta Tags -->
     <meta property="og:title" content="AI Prompt Gallery">
     <meta property="og:description" content="Browse 1000+ high-quality AI prompts and images.">
     <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
     <meta name="robots" content="index, follow, max-image-preview:large">
 
     <!-- Fonts -->
@@ -25,13 +24,13 @@
             --card-bg: #1c1f26;
             --text-primary: #ffffff;
             --text-secondary: #a0a0a0;
-            --accent-color: #3b82f6;
-            --accent-hover: #2563eb;
+            --accent-color: #6366f1; /* Indigo-500 */
+            --accent-hover: #4f46e5;
             --border-color: #2d3748;
-            --glass: rgba(28, 31, 38, 0.95);
+            --glass: rgba(15, 17, 21, 0.85);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
         
         body {
             font-family: 'Inter', sans-serif;
@@ -41,52 +40,100 @@
             overflow-x: hidden;
         }
 
-        /* --- HEADER & SEARCH --- */
+        /* --- HEADER --- */
         header {
             position: sticky;
             top: 0;
             z-index: 100;
             background: var(--glass);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
-            padding: 1.5rem 2rem;
+            padding: 1rem 2rem;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
             gap: 1rem;
         }
 
-        .brand { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .brand { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; white-space: nowrap; }
         .brand span { color: var(--accent-color); }
 
         .search-bar {
             position: relative;
-            max-width: 500px;
+            max-width: 400px;
             width: 100%;
         }
 
         .search-bar input {
             width: 100%;
-            background: #000;
+            background: #13161c;
             border: 1px solid var(--border-color);
-            padding: 0.8rem 1rem 0.8rem 2.5rem;
-            border-radius: 8px;
+            padding: 0.7rem 1rem 0.7rem 2.5rem;
+            border-radius: 50px;
             color: white;
-            font-size: 0.95rem;
-            transition: border 0.3s ease;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
         }
         
-        .search-bar input:focus { border-color: var(--accent-color); }
+        .search-bar input:focus { 
+            border-color: var(--accent-color); 
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
         
         .search-icon {
             position: absolute;
-            left: 10px;
+            left: 12px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-secondary);
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* --- CATEGORY FILTERS --- */
+        .filter-container {
+            display: flex;
+            gap: 0.8rem;
+            overflow-x: auto;
+            padding-bottom: 5px;
+            /* Hide scrollbar logic */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE */
+            mask-image: linear-gradient(to right, black 95%, transparent 100%);
+        }
+        .filter-container::-webkit-scrollbar { display: none; }
+
+        .filter-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            text-transform: capitalize;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+        }
+
+        .filter-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
         }
 
         /* --- MASONRY GRID --- */
@@ -96,7 +143,6 @@
             padding: 2rem;
         }
 
-        /* CSS Column Masonry - Best Performance for static height items */
         .masonry-grid {
             column-count: 4;
             column-gap: 1.5rem;
@@ -112,7 +158,7 @@
             border-radius: 12px;
             overflow: hidden;
             margin-bottom: 1.5rem;
-            break-inside: avoid; /* Prevents card from splitting across columns */
+            break-inside: avoid;
             border: 1px solid var(--border-color);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             position: relative;
@@ -123,21 +169,21 @@
         .card:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-color: #4a5568;
         }
 
         .card-image-wrapper {
             position: relative;
-            overflow: hidden;
-            background: #000;
-            min-height: 200px; /* Placeholder height */
+            min-height: 150px;
+            background: #111;
         }
 
         .card-img {
             width: 100%;
             height: auto;
             display: block;
-            transition: opacity 0.3s ease;
-            opacity: 0; /* Fade in on load */
+            transition: opacity 0.4s ease;
+            opacity: 0;
         }
 
         .card-img.loaded { opacity: 1; }
@@ -145,72 +191,82 @@
         .card-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent 60%);
             opacity: 0;
             transition: opacity 0.2s;
             display: flex;
             align-items: flex-end;
+            justify-content: space-between;
             padding: 1rem;
         }
 
         .card:hover .card-overlay { opacity: 1; }
 
-        .card-category {
+        .card-badges {
             position: absolute;
             top: 10px;
             left: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .badge {
             background: rgba(0,0,0,0.6);
             backdrop-filter: blur(4px);
             padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
             text-transform: uppercase;
             font-weight: 600;
             color: #eee;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .quick-copy {
-            background: var(--accent-color);
+        .icon-btn {
+            background: rgba(255,255,255,0.2);
             color: white;
             border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            font-weight: 500;
+            backdrop-filter: blur(4px);
+            transition: background 0.2s;
         }
+        .icon-btn:hover { background: var(--accent-color); }
 
-        /* --- LIGHTBOX MODAL --- */
+        /* --- MODAL --- */
         .modal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 1000;
             display: flex;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.3s ease;
-            backdrop-filter: blur(5px);
         }
 
         .modal.active { opacity: 1; pointer-events: all; }
 
         .modal-content {
             background: var(--card-bg);
-            width: 90%;
-            max-width: 1100px;
+            width: 95%;
+            max-width: 1200px;
             max-height: 90vh;
             margin: auto;
             border-radius: 16px;
             display: flex;
             overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             border: 1px solid var(--border-color);
+            position: relative;
         }
 
-        .modal-image-container {
+        .modal-image-col {
             flex: 1.5;
-            background: #000;
+            background: #050505;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -224,108 +280,108 @@
             border-radius: 4px;
         }
 
-        .modal-details {
+        .modal-info-col {
             flex: 1;
-            padding: 2rem;
+            padding: 2.5rem;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
             border-left: 1px solid var(--border-color);
         }
 
-        .modal-header {
+        .modal-close-mobile { display: none; }
+
+        .prompt-label {
+            color: var(--accent-color);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .prompt-text {
+            color: #e2e8f0;
+            font-size: 1rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .meta-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .close-btn:hover { color: #fff; }
-
-        .prompt-box {
-            background: #111;
-            padding: 1.5rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            color: #ddd;
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            max-height: 300px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-        }
-
-        .tags-container {
+        .tags-wrapper {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-bottom: 2rem;
+            margin-top: 1rem;
         }
 
-        .tag {
+        .tag-pill {
             background: #2d3748;
-            color: #ccc;
-            padding: 4px 10px;
-            border-radius: 4px;
+            color: #cbd5e0;
+            padding: 4px 12px;
+            border-radius: 15px;
             font-size: 0.8rem;
         }
 
-        .action-btn {
+        .action-row {
+            margin-top: auto;
+            padding-top: 2rem;
+        }
+
+        .btn-primary {
+            width: 100%;
             background: var(--accent-color);
             color: white;
             border: none;
             padding: 1rem;
             border-radius: 8px;
             font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            transition: background 0.2s;
+            transition: filter 0.2s;
         }
-        
-        .action-btn:hover { background: var(--accent-hover); }
+        .btn-primary:hover { filter: brightness(110%); }
 
-        /* Mobile Modal Adjustments */
         @media (max-width: 850px) {
-            .modal-content { flex-direction: column; overflow-y: scroll; }
-            .modal-image-container { height: 40vh; flex: none; }
-            .modal-details { height: auto; flex: none; }
+            .modal-content { flex-direction: column; overflow-y: scroll; height: 100vh; width: 100%; border-radius: 0; border: none; }
+            .modal-image-col { min-height: 40vh; flex: none; }
+            .modal-info-col { flex: none; padding: 1.5rem; }
+            .modal-close-mobile {
+                display: block;
+                position: absolute;
+                top: 15px; right: 15px;
+                background: rgba(0,0,0,0.5);
+                color: white;
+                border: none;
+                width: 30px; height: 30px;
+                border-radius: 50%;
+                z-index: 10;
+                font-size: 1.2rem;
+            }
         }
 
-        /* --- LOADING STATE --- */
-        .loader {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Utility for Copy Feedback */
+        .loader { text-align: center; padding: 2rem; color: var(--text-secondary); }
+        
         .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: #10b981;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease;
-            z-index: 2000;
-            font-weight: 600;
+            position: fixed; bottom: 30px; left: 50%; transform: translate(-50%, 100px);
+            background: #10b981; color: white; padding: 12px 24px; border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-weight: 600;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2000; display: flex; align-items: center; gap: 8px;
         }
-        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.show { transform: translate(-50%, 0); }
 
     </style>
     
@@ -335,7 +391,7 @@
       "@context": "https://schema.org",
       "@type": "ImageGallery",
       "name": "AI Prompt Gallery",
-      "description": "A collection of 1000 AI generated images with detailed prompts.",
+      "description": "High quality AI art prompts sorted by categories.",
       "images": [] 
     }
     </script>
@@ -343,40 +399,51 @@
 <body>
 
 <header>
-    <div class="brand">Prompt<span>Gallery</span></div>
-    <div class="search-bar">
-        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        <input type="text" id="searchInput" placeholder="Search prompts, categories, or tags...">
+    <div class="header-top">
+        <div class="brand">Prompt<span>Gallery</span></div>
+        <div class="search-bar">
+            <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" id="searchInput" placeholder="Search prompts or categories...">
+        </div>
+    </div>
+    <!-- Dynamic Filter Bar -->
+    <div class="filter-container" id="filterContainer">
+        <button class="filter-btn active" onclick="filterData('All')">All</button>
+        <!-- Categories injected via JS -->
     </div>
 </header>
 
 <div class="container">
-    <div class="masonry-grid" id="galleryGrid">
-        <!-- Javascript will inject items here -->
-    </div>
-    <div id="loading" class="loader">Loading more inspirations...</div>
+    <div class="masonry-grid" id="galleryGrid"></div>
+    <div id="loading" class="loader">Loading inspiration...</div>
 </div>
 
 <!-- Modal -->
 <div class="modal" id="imageModal">
+    <button class="modal-close-mobile" id="closeModalMobile">&times;</button>
     <div class="modal-content">
-        <div class="modal-image-container">
-            <img src="" alt="AI Generated Art" class="modal-img" id="modalImg">
+        <div class="modal-image-col">
+            <img src="" alt="" class="modal-img" id="modalImg">
         </div>
-        <div class="modal-details">
-            <div class="modal-header">
-                <span class="card-category" id="modalCategory" style="position:static; margin:0;">Category</span>
-                <button class="close-btn" id="closeModal">&times;</button>
+        <div class="modal-info-col">
+            <div style="display:flex; justify-content:space-between; align-items:start;">
+                <span class="badge" id="modalCategory" style="background:var(--accent-color); border:none;">Category</span>
+                <button id="closeModalDesktop" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:1.5rem;">&times;</button>
             </div>
-            
-            <label style="color:var(--text-secondary); font-size:0.8rem; margin-bottom:0.5rem; display:block;">PROMPT</label>
-            <div class="prompt-box" id="modalPrompt"></div>
-            
-            <div class="tags-container" id="modalTags"></div>
-            
-            <div style="margin-top:auto">
-                <button class="action-btn" id="copyBtn">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+
+            <div style="margin-top:2rem;">
+                <div class="prompt-label">Prompt</div>
+                <div class="prompt-text" id="modalPrompt"></div>
+            </div>
+
+            <div>
+                <div class="prompt-label">Tags</div>
+                <div class="tags-wrapper" id="modalTags"></div>
+            </div>
+
+            <div class="action-row">
+                <button class="btn-primary" id="copyBtn">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                     Copy Prompt
                 </button>
             </div>
@@ -384,210 +451,234 @@
     </div>
 </div>
 
-<div class="toast" id="toast">Copied to clipboard!</div>
+<div class="toast" id="toast">
+    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    Copied to clipboard
+</div>
 
 <script>
-    // --- STATE MANAGEMENT ---
+    // --- CONFIG & STATE ---
     let allData = [];
-    let displayedData = [];
+    let filteredData = [];
     let loadedCount = 0;
-    const BATCH_SIZE = 20;
+    const BATCH_SIZE = 24;
+    let activeCategory = 'All';
+    let searchTerm = '';
+
     const grid = document.getElementById('galleryGrid');
     const loadingEl = document.getElementById('loading');
-    let isModalOpen = false;
+    const filterContainer = document.getElementById('filterContainer');
 
-    // --- FETCH DATA ---
-    async function initGallery() {
+    // --- INITIALIZATION ---
+    async function init() {
         try {
+            // Updated to 'prompts.json' as requested
             const response = await fetch('prompts.json');
-            if (!response.ok) throw new Error('Failed to load prompt.json');
+            if (!response.ok) throw new Error('prompts.json not found');
             
             allData = await response.json();
+            filteredData = allData;
             
-            // Optimization: Generate basic SEO schema for the first 100 items to keep DOM light
-            updateSEOSchema(allData.slice(0, 50));
-            
-            // Initial Render
-            displayedData = allData;
+            setupCategories();
             renderNextBatch();
-            
-            // Setup Infinite Scroll
-            setupIntersectionObserver();
+            setupObserver();
+            updateSEO(allData.slice(0, 100)); // SEO schema for first 100 items
+
         } catch (error) {
+            loadingEl.textContent = "Error: Please ensure 'prompts.json' is in the folder.";
             console.error(error);
-            loadingEl.textContent = "Error loading gallery data. Please ensure prompt.json is present.";
         }
+    }
+
+    // --- CATEGORY SETUP ---
+    function setupCategories() {
+        // Extract unique categories (Case insensitive normalization could be added if needed)
+        const categories = [...new Set(allData.map(item => item.category))].sort();
+        
+        categories.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = 'filter-btn';
+            btn.textContent = cat;
+            btn.onclick = () => filterData(cat);
+            filterContainer.appendChild(btn);
+        });
+    }
+
+    // --- FILTER LOGIC ---
+    window.filterData = function(category) {
+        activeCategory = category;
+        searchTerm = ''; // Optional: Clear search when category clicked
+        document.getElementById('searchInput').value = '';
+
+        // Update Button Styles
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => {
+            if (btn.textContent === category) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+
+        // Filter Data
+        if (category === 'All') {
+            filteredData = allData;
+        } else {
+            // Case-insensitive comparison just in case
+            filteredData = allData.filter(item => item.category.toLowerCase() === category.toLowerCase());
+        }
+
+        resetGrid();
+    };
+
+    // --- SEARCH LOGIC ---
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        searchTerm = e.target.value.toLowerCase();
+        
+        // Reset category visual to 'All' if searching deeply
+        if (searchTerm.length > 0) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.filter-btn:first-child').classList.add('active');
+            activeCategory = 'All';
+        }
+
+        filteredData = allData.filter(item => {
+            return item.category.toLowerCase().includes(searchTerm) || 
+                   item.prompt.toLowerCase().includes(searchTerm) ||
+                   (item.tags && item.tags.some(tag => tag.toLowerCase().includes(searchTerm)));
+        });
+
+        resetGrid();
+    });
+
+    function resetGrid() {
+        grid.innerHTML = '';
+        loadedCount = 0;
+        loadingEl.style.display = 'block';
+        renderNextBatch();
     }
 
     // --- RENDERING ---
     function renderNextBatch() {
-        const nextBatch = displayedData.slice(loadedCount, loadedCount + BATCH_SIZE);
+        const batch = filteredData.slice(loadedCount, loadedCount + BATCH_SIZE);
         
-        if (nextBatch.length === 0) {
+        if (batch.length === 0 && loadedCount === 0) {
+            loadingEl.textContent = "No results found.";
+            return;
+        }
+
+        if (batch.length === 0) {
             loadingEl.style.display = 'none';
             return;
+        } else {
+            loadingEl.textContent = "Loading...";
         }
 
         const fragment = document.createDocumentFragment();
 
-        nextBatch.forEach(item => {
+        batch.forEach(item => {
             const card = document.createElement('figure');
             card.className = 'card';
             card.onclick = () => openModal(item);
             
-            // Shorten prompt for alt text to benefit SEO without bloating
-            const altText = item.prompt.substring(0, 150).replace(/"/g, '') + '...';
+            const alt = item.prompt.slice(0, 100) + '...';
 
             card.innerHTML = `
                 <div class="card-image-wrapper">
-                    <div class="card-category">${item.category}</div>
-                    <img src="${item.image}" 
-                         alt="${altText}" 
-                         class="card-img" 
-                         loading="lazy"
-                         onload="this.classList.add('loaded')">
+                    <img src="${item.image}" alt="${alt}" class="card-img" onload="this.classList.add('loaded')">
+                    <div class="card-badges">
+                        <span class="badge">${item.category}</span>
+                    </div>
                     <div class="card-overlay">
-                        <button class="quick-copy" onclick="event.stopPropagation(); copyText('${item.prompt.replace(/'/g, "\\'")}')">
-                            Copy Prompt
+                        <span style="font-size:0.8rem; font-weight:600; color:white; text-shadow:0 2px 4px black;">View Prompt</span>
+                        <button class="icon-btn" onclick="event.stopPropagation(); copyToClipboard('${escapeStr(item.prompt)}')">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 01-2-2V5a2 2 0 012-2h4.586"></path></svg>
                         </button>
                     </div>
                 </div>
-                <figcaption style="display:none">${item.prompt}</figcaption> <!-- Semantic hidden caption -->
+                <figcaption style="display:none">${item.prompt}</figcaption>
             `;
             fragment.appendChild(card);
         });
 
         grid.appendChild(fragment);
-        loadedCount += nextBatch.length;
-        
-        if (loadedCount >= displayedData.length) {
-            loadingEl.style.display = 'none';
-        }
+        loadedCount += batch.length;
+
+        if (loadedCount >= filteredData.length) loadingEl.style.display = 'none';
     }
 
-    // --- INFINITE SCROLL ---
-    function setupIntersectionObserver() {
+    // --- INFINITE SCROLL OBSERVER ---
+    function setupObserver() {
         const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
-                renderNextBatch();
-            }
-        }, { rootMargin: '200px' });
-        
+            if(entries[0].isIntersecting) renderNextBatch();
+        }, { rootMargin: '400px' });
         observer.observe(loadingEl);
     }
 
-    // --- SEARCH & FILTER ---
-    const searchInput = document.getElementById('searchInput');
-    let searchTimeout;
-
-    searchInput.addEventListener('input', (e) => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            const term = e.target.value.toLowerCase();
-            
-            // Reset Grid
-            grid.innerHTML = '';
-            loadedCount = 0;
-            loadingEl.style.display = 'block';
-
-            if (term === '') {
-                displayedData = allData;
-            } else {
-                displayedData = allData.filter(item => 
-                    item.category.toLowerCase().includes(term) || 
-                    item.prompt.toLowerCase().includes(term) ||
-                    (item.tags && item.tags.some(tag => tag.toLowerCase().includes(term)))
-                );
-            }
-            renderNextBatch();
-        }, 300); // Debounce
-    });
-
-    // --- MODAL LOGIC ---
+    // --- MODAL & ACTIONS ---
     const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImg');
-    const modalPrompt = document.getElementById('modalPrompt');
-    const modalCategory = document.getElementById('modalCategory');
-    const modalTags = document.getElementById('modalTags');
-    const copyBtn = document.getElementById('copyBtn');
-
+    
     function openModal(item) {
-        modalImg.src = item.image;
-        modalPrompt.textContent = item.prompt;
-        modalCategory.textContent = item.category;
+        document.getElementById('modalImg').src = item.image;
+        document.getElementById('modalCategory').textContent = item.category;
+        document.getElementById('modalPrompt').textContent = item.prompt;
         
-        // Tags
-        modalTags.innerHTML = '';
-        if(item.tags) {
+        const tagsContainer = document.getElementById('modalTags');
+        tagsContainer.innerHTML = '';
+        if (item.tags) {
             item.tags.forEach(tag => {
                 const span = document.createElement('span');
-                span.className = 'tag';
+                span.className = 'tag-pill';
                 span.textContent = '#' + tag;
-                modalTags.appendChild(span);
+                tagsContainer.appendChild(span);
             });
         }
 
-        // Setup Copy Button
-        copyBtn.onclick = () => copyText(item.prompt);
-
+        document.getElementById('copyBtn').onclick = () => copyToClipboard(item.prompt);
+        
         modal.classList.add('active');
-        isModalOpen = true;
-        document.body.style.overflow = 'hidden'; // Prevent scrolling bg
+        document.body.style.overflow = 'hidden';
     }
 
     function closeModal() {
         modal.classList.remove('active');
-        isModalOpen = false;
         document.body.style.overflow = '';
-        setTimeout(() => { modalImg.src = ''; }, 300); // Clear after anim
     }
 
-    document.getElementById('closeModal').onclick = closeModal;
-    
-    // Close on click outside
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
+    // Modal Event Listeners
+    ['closeModalMobile', 'closeModalDesktop'].forEach(id => {
+        document.getElementById(id).onclick = closeModal;
     });
+    modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && isModalOpen) closeModal();
-    });
+    // Helper: Escape string for inline HTML onclick
+    function escapeStr(str) {
+        return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
 
-    // --- UTILITIES ---
-    async function copyText(text) {
+    // Helper: Clipboard
+    async function copyToClipboard(text) {
         try {
             await navigator.clipboard.writeText(text);
-            showToast();
-        } catch (err) {
-            console.error('Failed to copy', err);
-        }
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        } catch (err) { console.error('Copy failed', err); }
     }
 
-    function showToast() {
-        const toast = document.getElementById('toast');
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2000);
-    }
-
-    // --- SEO GENERATION ---
-    function updateSEOSchema(items) {
-        const schema = document.getElementById('seo-json-ld');
-        const data = JSON.parse(schema.textContent);
-        
-        data.images = items.map(item => ({
+    // SEO Helper
+    function updateSEO(items) {
+        const script = document.getElementById('seo-json-ld');
+        const data = JSON.parse(script.textContent);
+        data.images = items.map(i => ({
             "@type": "ImageObject",
-            "contentUrl": window.location.origin + item.image,
-            "description": item.prompt,
-            "name": `AI Art - ${item.category}`,
-            "keywords": item.tags ? item.tags.join(', ') : ""
+            "contentUrl": i.image,
+            "description": i.prompt,
+            "name": i.category
         }));
-        
-        schema.textContent = JSON.stringify(data);
+        script.textContent = JSON.stringify(data);
     }
 
-    // Initialize
-    initGallery();
+    // Start
+    init();
 
 </script>
 </body>
