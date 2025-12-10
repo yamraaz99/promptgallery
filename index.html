@@ -399,7 +399,7 @@
     // --- FETCH DATA ---
     async function initGallery() {
         try {
-            const response = await fetch('prompt.json');
+            const response = await fetch('prompts.json');
             if (!response.ok) throw new Error('Failed to load prompt.json');
             
             allData = await response.json();
